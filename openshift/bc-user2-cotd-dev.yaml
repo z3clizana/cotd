@@ -1,0 +1,36 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: user2-cotd-dev
+  name: user2-cotd-dev
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: user2-cotd-dev:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: master
+      uri: https://github.com/z3clizana/cotd
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: php:7.1
+        namespace: openshift
+    type: Source
+  triggers:
+  - imageChange:
+    type: ImageChange
+  - type: ConfigChange
+  - generic:
+      secret: b7ecbd19bc617e3f
+    type: Generic
+  - github:
+      secret: fe04f74ad335ec70
+    type: GitHub

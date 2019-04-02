@@ -1,0 +1,54 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: user2-cotd-dev
+  name: user2-cotd-dev
+spec:
+  replicas: 1
+  selector:
+    deploymentconfig: user2-cotd-dev
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: user2-cotd-dev
+        deploymentconfig: user2-cotd-dev
+    spec:
+      containers:
+      - image: ' '
+        imagePullPolicy: Always
+        name: user2-cotd-dev
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - user2-cotd-dev
+      from:
+        kind: ImageStreamTag
+        name: user2-cotd-dev:latest
+    type: ImageChange
+  - type: ConfigChange
