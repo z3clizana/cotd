@@ -44,7 +44,6 @@ spec:
   test: false
   triggers:
   - imageChangeParams:
-      automatic: true
       containerNames:
       - user2-cotd-dev
       from:
